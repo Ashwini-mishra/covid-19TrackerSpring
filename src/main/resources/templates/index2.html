@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<link href="https://unpkg.com/tabulator-tables@4.7.2/dist/css/tabulator.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.7.2/dist/js/tabulator.min.js"></script>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<style>
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: Arial;
+	padding: 10px;
+	background: #f1f1f1;
+}
+
+/* Header/Blog Title */
+.header {
+	padding: 30px;
+	text-align: center;
+	background: white;
+}
+
+.header h1 {
+	font-size: 50px;
+}
+
+/* Style the top navigation bar */
+.topnav {
+	overflow: hidden;
+	background-color: #333;
+}
+
+/* Style the topnav links */
+.topnav a {
+	float: left;
+	display: block;
+	color: #f2f2f2;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+/* Change color on hover */
+.topnav a:hover {
+	background-color: #ddd;
+	color: black;
+}
+/* table part*/
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 15px;
+	text-align: left;
+}
+
+#t01 {
+	width: 100%;
+	background-color: #f1f1c1;
+}
+
+/* Create two unequal columns that floats next to each other */
+/* Left column */
+.leftcolumn {
+	float: left;
+	width: 75%;
+}
+
+/* Right column */
+.rightcolumn {
+	float: left;
+	width: 25%;
+	background-color: #f1f1f1;
+	padding-left: 20px;
+}
+
+/* Fake image */
+.fakeimg {
+	background-color: #aaa;
+	width: 100%;
+	padding: 20px;
+}
+
+/* Add a card effect for articles */
+.card {
+	background-color: white;
+	padding: 20px;
+	margin-top: 20px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+
+/* Footer */
+.footer {
+	padding: 20px;
+	text-align: center;
+	background: #ddd;
+	margin-top: 20px;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 800px) {
+	.leftcolumn, .rightcolumn {
+		width: 100%;
+		padding: 0;
+	}
+}
+
+/* Responsive layout - when the screen is less than 400px wide, make the navigation links stack on top of each other instead of next to each other */
+@media screen and (max-width: 400px) {
+	.topnav a {
+		float: none;
+		width: 100%;
+	}
+}
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+</style>
+<body>
+	<div id="dtable">	
+	</div>
+	
+	<div id ="loadDemoDiv" style = "height: 500px; width : 500px;">
+			<canvas id="myChart2" ></canvas><p>national data</p>	
+	</div>
+	<div class="clearfix"></div>
+	<div style=" height:70%; width:70%;">
+		<div id="example-table"></div>
+		</div>
+</body>
+
+ <script>
+loadCovidDetailsService();
+//var testData = JSON.parse('[{ "srno" : 1, "city":"Delhi", "noOfCase":"5000"},{ "srno" : 2, "city":"Maharastra", "noOfCase":"8000"},{ "srno" : 3, "city":"Jharkhand", "noOfCase":"3000"}]');
+
+	
+
+	/*State Data Table List*/
+	function loadTabledata(totalData) {
+		var divNationalDetails ="<div class='leftcolumn'><div class='card'><h2>Cases In India</h2><table style='width: 100%' , id='t01'><tr><th>Country</th><th>Confirmed</th><th>Active</th><th>Recovered</th><th>Death</th></tr>";
+		
+		for (var i = 0; i < totalData.length; i++) {
+		//alert(testData['Country']);
+		if(totalData[i]['country']!=null)
+		divNationalDetails = divNationalDetails+ "<tr><td>" + totalData[i]['country'] +"</td><td>" + totalData[i]['confirmed'] + "</td><td>"+ totalData[i]['active'] +"</td><td>" + totalData[i]['recovered'] +"</td><td>" + totalData[i]['death'] +"</td></tr></table></div></div>";
+		}
+		//divNationalDetails = divNationalDetails+"</table></div></div>";
+		document.getElementById("dtable").innerHTML = divNationalDetails;
+	}
+
+	function loadCovidDetailsService(){
+		
+		var urllog = "http://localhost:8080/getDetailsOfCovidList2";
+			
+			$.ajax({
+			    type: 'GET',
+			    url: urllog,
+			    success: function(result){
+			    	loadTabledata(result)
+			    	loadGraph1(result)
+			    }
+			    	
+			})
+	}
+	
+//var graphData1 = [400, 800, 1000, 200];
+//loadGraph1(graphData1);
+function loadGraph1(graphData1){
+	var conf;
+	var active;
+	var recov;
+	var death;
+	for (var i = 0; i < graphData1.length; i++) {
+	conf=graphData1[i]['confirmed'];
+	active=graphData1[i]['active'] ;
+	recov=graphData1[i]['recovered'] ;
+	death=graphData1[i]['death'] ;
+	}
+	var graphData5 = [conf, active, recov, death];
+var ctx = document.getElementById('myChart2').getContext('2d');
+var myChart2 = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Confirmed','Active','Recovered','Death'],
+        datasets: [{
+            label: '# of No.of Cases',
+            data: graphData5,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+}
+</script>
+</html>

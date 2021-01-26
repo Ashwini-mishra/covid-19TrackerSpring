@@ -1,0 +1,642 @@
+
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link href="https://unpkg.com/tabulator-tables@4.7.2/dist/css/tabulator.min.css" rel="stylesheet">
+<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.7.2/dist/js/tabulator.min.js"></script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+<script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+<style>
+.oralB{border-style: solid;
+    border-width: 0px 6px;
+    text-align: center;
+	margin-top: 20px;}
+body,h1,h2,h3,h4,h5 {font-family: none}
+body {font-size:16px; background-color:#030303}
+.w3-half img{margin-bottom:-6px;margin-top:16px;opacity:0.8;cursor:pointer}
+.w3-half img:hover{opacity:1}
+</style>
+
+<link rel="stylesheet" href="css/style.css"/>
+<head>
+<meta charset="ISO-8859-1">
+
+<title>Covid-19 tracker</title>
+</head>
+
+ 
+<body>
+
+<div  class="header" id="header" >
+  <h1 style="margin: 10px;">Covid-19 Tracker</h1>
+ <!--  <p>	<button type="button" onclick="document.getElementById('demo').innerHTML = Date()">
+	Current Date and Time.</button>  <p id="demo"></p> -->
+</div>
+
+
+ 
+<div class="topnav"  id="myTopnav">
+  <a href="https://www.mohfw.gov.in/" target="_blank">Goverment of India</a>
+  <a onclick="statePage()">State data</a>
+  <a href="#">What to use</a>
+  <a href="#">Types of covid virus</a>
+   <a href="javascript:void(0);" class="icon" onclick="myFunction()" style="background: lightskyblue; margin:20px;">
+    <i class="fa fa-bars"></i>
+  </a>
+  <button onclick="document.getElementById('id01').style.display='block'" id ="login" style="width:auto; float:right;">Login</button>
+   <button class="button5" id ='logout' onclick = "logout()">Logout</button>
+ 
+  
+  
+   
+
+<div id="id01" class="modal">
+  
+  <!--  <form class="modal-content animate" action="#" method="post"> -->
+
+    <div class="container modal-content animate">
+      <label for="username"><b>User Name</b></label><br>
+      <input type="text" id="username" placeholder="Enter Username" name="username" required><br>
+
+      <label for="password"><b>Password</b></label><br>
+      <input type="password" id="password" placeholder="Enter Password" name="password" required><br>
+        
+      <button type="submit" onclick="login2()">Login</button>
+     
+     
+    </div>
+
+   <!-- <div class="container" style="background-color:#f1f1f1">
+      <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+    </div>
+    </form>-->
+</div>
+   
+</div>
+
+<div id="body">
+<div  class="row">
+<h2 style='color:#f6c0c0;'>Cases In India</h2>
+<div id="nationaltable" style="margin-top:20px;"></div>
+<div class="rightcolumn1" id ="loadDemoDiv"  style=" padding: 20px;width:'80%'; height:'100%';box-shadow: 5px 5px;">
+		<canvas id="myChart2" ></canvas>
+		
+  </div>
+
+ </div>
+ 
+ 
+<div  class="row">
+<div class='leftcolumn'>
+<div class='card'>
+<h2 style='color:#f6c0c0;'>State Cases</h2>
+<div id="Statetable"></div></div></div>
+
+ <div class="rightcolumn" style=" box-shadow: 5px 10px;">
+		<img src="images/map_of_india2.jpg" width="100%" height="100%">
+		<!--  <h3>Follow For The Latest Update</h3>-->
+  </div>
+</div>
+	</div>
+	
+<div id="myDIV" class="container">
+<div  id ="formtable"></div>
+  <form action="#">
+   
+  <div class="row">
+    <div class="col-25">
+      <label for="confirmed">Confirmed</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="confirmed" name="confirmed" placeholder="cases of confirmed">
+    </div>
+  </div>
+ 
+  <div class="row">
+    <div class="col-25">
+      <label for="active">Active</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="active" name="active" placeholder="cases of active">
+    </div>
+  </div>
+ 
+  <div class="row">
+    <div class="col-25">
+      <label for="recovered">Recovered</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="recovered" name="recovered" placeholder="cases of recovered">
+    </div>
+  </div>
+ 
+  <div class="row">
+    <div class="col-25">
+      <label for="death">Death</label>
+    </div>
+    <div class="col-75">
+      <input type="text" id="death" name="death" placeholder="cases of death">
+    </div>
+  </div>
+ 
+ 
+  <div class="row">
+    <div class="col-25">
+      <label for="state">State</label>
+    </div>
+    <div class="col-75">
+      <select id="state" name="state">
+       <option value="total">Total</option>
+        <option value="maharashtra">Maharashtra</option>
+        <option value="delhi">Delhi</option>
+        <option value="jharkhand">Jharkhand</option>
+		<option value="bihar">Bihar</option>
+        <option value="tamil nadu">Tamil Nadu</option>
+        <option value="gujarat">Gujarat</option>
+		<option value="karnataka">Karnataka</option>
+        <option value="uttar pradesh">Uttar Pradesh</option>
+        <option value="telangana">Telangana</option>
+		<option value="ap">Andhra Pradesh</option>
+        <option value="wb">West Bengal</option>
+        <option value="rajasthan">Rajasthan</option>
+		<option value="haryana">Haryana</option>
+        <option value="madhya pradesh">Madhya Pradesh</option>
+        <option value="assam">Assam</option>
+		<option value="odisha">Odisha</option>
+        <option value="j&k">Jammu and Kashmir</option>
+        <option value="punjab">Punjab</option>
+		<option value="kerala">Kerala</option>
+        <option value="chhattisgarh">Chhattisgarh</option>
+        <option value="goa">Goa</option>
+		<option value="tripura">Tripura</option>
+        <option value="manipur">Manipur</option>
+        <option value="Puducherry">Puducherry</option>
+		<option value="himachal pradesh">Himachal Pradesh</option>
+        <option value="ladakh">Ladakh</option>
+        <option value="nagaland">Nagaland</option>
+		<option value="chandigarh">Chandigarh</option>
+		<option value="danhdd">Dadra and Nagar Haveli and Daman and Diu</option>
+        <option value="arunachal pradesh">Arunachal Pradesh</option>
+        <option value="meghalaya">Meghalaya</option>
+		<option value="mizoram">Mizoram</option>
+        <option value="andaman">Andaman and Nicobar Islands</option>
+        <option value="sikkim">Sikkim</option>
+		<option value="lakshadweep">Lakshadweep</option>
+      </select>
+    </div>
+  </div>
+  <div class="row">
+    <input type="submit" onclick="update1()">
+<!--   <button class="button5" id ='logout' onclick = "logout()">Logout</button> -->
+  </div>
+  </form>
+</div> 
+	
+	
+<div id="state_page">
+	
+	<!-- Sidebar/menu -->
+	
+<nav class="w3-sidebar w3-red w3-collapse w3-top w3-large w3-padding" style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-button w3-hide-large w3-display-topleft" style="width:100%;font-size:22px">×</a>
+  	<div class="w3-container">
+    	<h3 class="w3-padding-64"><b>covid-19 Tracker<br>State Cases</b></h3>
+  	</div>
+ 	 <div class="w3-bar-block">
+   		 <a onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Home</a>
+    	 <a href="#" class="w3-bar-item w3-button w3-hover-white">What to use</a>
+    	 <a href="#" class="w3-bar-item w3-button w3-hover-white">Types of covid virus</a> 
+		 <!--<a href="#showcase" onclick="w3_close()" class="w3-bar-item w3-button w3-hover-white">Showcase</a> -->
+    </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-top w3-hide-large w3-red w3-xlarge w3-padding">
+  <a href="javascript:void(0)" class="w3-button w3-red w3-margin-right" onclick="w3_open()">☰</a>
+  <span>Menu</span>
+</header>
+
+  <!-- Modal for full size images on click-->
+  <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+    <span class="w3-button w3-black w3-xxlarge w3-display-topright">×</span>
+    	<div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+     		<div id="myChart21"></div>
+    	</div>
+  </div>
+
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+
+<div class="w3-main" style="margin-left:340px;margin-right:40px">
+
+  <!-- The Team -->
+  
+  <div class="w3-row-padding w3-grayscale" style="margin:50px;" onclick="onClick(state)">
+  		<div id="dispState"></div>
+  </div>
+  </div>
+	</div>
+	
+	
+<div class="footer">
+  <h2>Ashwini Kr. Mishra</h2>
+</div>
+</body>
+
+<script>
+var token="";
+var user1="";
+var userName;
+var y = document.getElementById("myDIV");
+y.style.display = "none";
+
+var a = document.getElementById("logout");
+a.style.display = "none";
+
+var j= document.getElementById("body");
+j.style.display = "block";
+
+var st = document.getElementById("state_page");
+st.style.display = "none";
+
+loadCovidDetailsService();
+//var testData = JSON.parse('[{ "srno" : 1, "State":"Delhi", "Confirmed":"5000","Active":"800","Recovered":"3000","Death":"800"},{ "srno" : 2, "State":"Maharastra","Confirmed":"9000","Active":"500","Recovered":"5000","Death":"1000"},{ "srno" : 3, "State":"Jharkhand","Confirmed":"1000","Active":"2000","Recovered":"600","Death":"10"},{ "srno" : 4, "State":"Bihar", "Confirmed":"5900","Active":"100","Recovered":"3500","Death":"800"}]');
+	//loadTabledata2(testData);
+
+	
+function loadTabledata2(testData) {	
+		var table = new Tabulator("#Statetable", {
+    
+	data:testData,
+	
+	columns:[
+		{title:"State", field:"state",width:200},
+		{title:"Graph", field:'death', sorter:"number", hozAlign:"left", formatter:"progress", width:200,  editable:true},
+		{title:"Confirmed", field:"confirmed", hozAlign:"center",width:150},
+		{title:"Active", field:"active", hozAlign:"center",width:150},
+		{title:"Recovered", field:"recovered", hozAlign:"center", sorter:"number",width:150},
+		{title:"Death", field:"death", width:150},
+		],	
+});
+
+	}
+	
+	
+/*National Data Table List*/
+ 
+//var totalData = JSON.parse('{"Country":"India", "Confirmed":"5000","Active":"800","Recovered":"3000","Death":"800"}');
+	//loadTabledata(totalData);
+	
+	function loadTabledata(totalData) {
+var confirmed;
+var active;
+var death;
+var recovered;
+
+for (var i = 0; i < totalData.length; i++){
+
+confirmed=totalData[i]['confirmed'];
+active=totalData[i]['active'];
+recovered=totalData[i]['recovered'];
+death=totalData[i]['death']
+}
+/*
+var divNationalDetails ="<div class='leftcolumn1'><div class='card'><h2 style='color:#f6c0c0;'>Cases In India</h2><table style='width: 100%' , id='t01'><tr><th class='color4' >Confirmed</th><td class='color3'>"+confirmed+"</td> <th class='color1'>Active</th><td class='color3'>"+active+"</td></tr>";
+divNationalDetails=divNationalDetails+"<tr><th class='color2'>Recovered</th><td class='color3'>"+recovered+"</td><th class='color'>Death</th><td class='color3'>"+death+"</td></tr></table></div></div>";
+*/
+
+var  divNationalDetails ='<div class="row12 leftcolumn1"><div class="column11"><h4 class="alpha">Confirmed </h4><h1 class="alpha">'+confirmed+'</h1></div>';
+divNationalDetails = divNationalDetails +'<div class="column12"><h4 class="alpha">Active</h4><h1 class="alpha">'+active+'</h1></div>';
+divNationalDetails = divNationalDetails +'<div class="column13"><h4 class="alpha">Recovered</h4><h1 class="alpha">'+recovered+'</h1></div>';
+divNationalDetails = divNationalDetails +'<div class="column14"><h4 class="alpha">Death</h4><h1 class="alpha">'+death+'</h1></div></div>';
+
+document.getElementById("nationaltable").innerHTML = divNationalDetails;
+
+
+}
+	
+	
+	function loadCovidDetailsService(){
+
+	//var urllog = "http://localhost:8080/getDetailsOfCovidList5";
+
+		$.ajax({
+			type : 'GET',
+			url :  "http://localhost:8080/getDetailsOfCovidList5",
+			success : function(result) {
+				loadTabledata2(result)
+				displayMyStateData(result)
+			}
+
+		})
+		$.ajax({
+			type : 'GET',
+			url :  "http://localhost:8080/getDetailsOfCovidList2",
+			success : function(result) {
+				loadTabledata(result)
+				loadGraph1(result)
+			}
+
+		})
+	}
+	
+function loadGraph1(graphData1){
+	var conf;
+	var active;
+	var recov;
+	var death;
+	for (var i = 0; i < graphData1.length; i++) {
+	conf=graphData1[i]['confirmed'];
+	active=graphData1[i]['active'] ;
+	recov=graphData1[i]['recovered'] ;
+	death=graphData1[i]['death'] ;
+	}
+	var graphData5 = [conf, active, recov, death];
+var ctx = document.getElementById('myChart2').getContext('2d');
+var myChart2 = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Confirmed','Active','Recovered','Death'],
+        datasets: [{
+            label: '# No.of Cases',
+            data: graphData5,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+}
+
+
+function login2(){
+	var urllog = "http://localhost:8080/login";
+	var user = document.getElementById("username").value;
+	var pass = document.getElementById("password").value;
+	var fd = new FormData(); 
+	$.ajax({
+	    type: 'POST',
+	    url: urllog,
+	    data :{"user" :user, "pass" : pass},
+	    success: function(result){
+	    	//loginSucessDiv(result);
+	    	 if(result[0].status=='sucess'){
+	    		 token = result[0].token;
+	    		 user1 = result[0].userName;
+	    		loginSucessDiv(result);
+	    	}else{
+	    		alert(result[0].data);
+	    	} 
+	    	
+	    },
+	    error: function(result){
+	    	alert("login fail");
+	    	
+	    }
+	})
+}
+
+function update1(){
+	var urllog = "http://localhost:8080/update";
+	var state = document.getElementById("state").value;
+	var confirmed = document.getElementById("confirmed").value;
+	var recovered = document.getElementById("recovered").value;
+	var active = document.getElementById("active").value;
+	var death = document.getElementById("death").value;
+	
+	//var fd = new FormData(); 
+	$.ajax({
+	    type: 'POST',
+	    url: urllog,
+	    data :{state,confirmed,recovered,active,death,user1,token},
+	    success: function(result){
+	    	//loginSucessDiv(result);
+	    	 if(result[0].status=='sucess'){
+	    		//updateSucessDiv(result);
+	    		 alert("updated sucessfully");
+	    	}else{
+	    		alert(result[0].data);
+	    	} 
+	    	
+	    },
+	    error: function(result){
+	    	alert("update fails");
+	    	
+	    }
+	})
+}
+
+function loginSucessDiv(result) {
+	  var x = document.getElementById("id01");
+	  var y = document.getElementById("myDIV");
+	  var j = document.getElementById("body");
+	  var a = document.getElementById("login");
+	  var b = document.getElementById("logout");
+	    b.style.display = "block";
+		a.style.display = "none";
+	    j.style.display = "none";
+	    x.style.display = "none";
+	    y.style.display = "block";
+	   
+	    var dbUserName =result[0].userName;
+	    document.getElementById("formtable").value = "Welcome " + dbUserName;
+	    
+	}
+	
+function logout(){
+	
+	var y = document.getElementById("myDIV");
+	y.style.display = "none";
+	
+	var a = document.getElementById("login");
+	a.style.display = "block";
+	
+	var b = document.getElementById("logout");
+	b.style.display = "none";
+	
+	var x = document.getElementById("id01");
+	x.style.display = "block";
+	
+	var y = document.getElementById("body");
+	y.style.display = "block";
+	
+}
+</script>
+
+<script>
+
+// Get the modal
+var modal = document.getElementById('id01');
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+function myFunction() {
+  var x = document.getElementById("myTopnav");
+  if (x.className === "topnav") {
+    x.className += " responsive";
+  } else {
+    x.className = "topnav";
+  }
+}
+</script>
+
+<script>
+// Script to open and close sidebar
+function w3_open() {
+  document.getElementById("mySidebar").style.display = "block";
+  document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+  document.getElementById("mySidebar").style.display = "none";
+  document.getElementById("myOverlay").style.display = "none";
+ statePageDisp()
+}
+
+// Modal Graph Gallery
+function onClick(element) {
+  document.getElementById("myChart21").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  
+}
+ 
+ 
+ 
+var seriesObj1={
+    values: [69,68,54,48,70,74,98,70,72,68,49,69]
+};
+var seriesObj2={
+    values: [51,53,47,60,48,52,75,52,55,47,60,48]
+};
+var seriesObj3={
+    values: [80,50,54,58,70,65,55,70,85,68,40,69]
+};
+var seriesObj4={
+    values: [20,53,47,90,48,52,75,60,55,47,80,48]
+};
+
+window.onload=function(){
+    zingchart.render({
+        id: "myChart21",
+        output: "svg",
+        height:400,
+        width: "100%",
+        data: {
+            type: "line",
+            title: {
+                text: "State Graph Data Presentation"
+            },
+            series: [
+                seriesObj1,seriesObj2,seriesObj3,seriesObj4
+            ]
+        }
+    });
+};
+
+
+//var result = JSON.parse('[{ "srno" : 11, "state":"Delhi", "confirmed":"5000","active":"800","recovered":"3000","death":"800"},{ "srno" : 12, "state":"Delhi", "confirmed":"5000","active":"800","recovered":"3000","death":"800"},{ "srno" : 13, "state":"Delhi", "confirmed":"5000","active":"800","recovered":"3000","death":"800"},{ "srno" : 14, "state":"Delhi", "confirmed":"5000","active":"800","recovered":"3000","death":"800"},{ "srno" : 1, "state":"Delhi", "confirmed":"5000","active":"800","recovered":"3000","death":"800"},{ "srno" : 2, "state":"Mahar","confirmed":"9000","active":"500","recovered":"5000","death":"1000"},{ "srno" : 3, "state":"Jharkhand","confirmed":"1000","active":"2000","recovered":"600","death":"10"},{ "srno" : 4, "state":"Bihar", "confirmed":"5900","active":"100","recovered":"3500","death":"800"}]');
+	
+	//displayMyStateData(result);
+
+	
+	function displayMyStateData(result){
+
+var myDispDtls='<div>';
+for (var x = 0; x < result.length ; x++) {
+
+        myDispDtls=myDispDtls+'<div class="w3-col m2 w3-margin-bottom"><div class="w3-light-grey"><div class="oralB"><div>';
+		myDispDtls = myDispDtls +"<h6><b>"+ result[x]['state'] +"</b></h6>" + "<h6><i>Confirmed</i></h6><h3>" + result[x]['confirmed'] +"</h3>" +"<h6><i>Active</i></h6><h3>" + result[x]['active'] +"</h3>" +"<h6><i>Recovered</i></h6><h3>" + result[x]['recovered'] +"</h3>" + "<h6><i>Death</i></h6><h3>" +result[x]['death'] +"</h3>";
+		myDispDtls = myDispDtls +'</div></div></div></div></div>';
+		}
+document.getElementById("dispState").innerHTML = myDispDtls;
+
+}
+function statePage()
+{
+	var y = document.getElementById("myDIV");
+	y.style.display = "none";
+	
+	var a = document.getElementById("login");
+	a.style.display = "none";
+	
+	var b = document.getElementById("logout");
+	b.style.display = "none";
+	
+	var x = document.getElementById("id01");
+	x.style.display = "none";
+	
+	var y = document.getElementById("body");
+	y.style.display = "none";
+	
+	var hed = document.getElementById("header");
+	hed.style.display = "none";
+	
+	var top = document.getElementById("myTopnav");
+	top.style.display = "none";
+	
+	var st = document.getElementById("state_page");
+	st.style.display = "block";
+}
+
+function statePageDisp()
+{
+	var y = document.getElementById("myDIV");
+	y.style.display = "none";
+	
+	var a = document.getElementById("login");
+	a.style.display = "block";
+	
+	var b = document.getElementById("logout");
+	b.style.display = "none";
+	
+	var x = document.getElementById("id01");
+	x.style.display = "none";
+	
+	var y = document.getElementById("body");
+	y.style.display = "block";
+	
+	var hed = document.getElementById("header");
+	hed.style.display = "block";
+	
+	var top = document.getElementById("myTopnav");
+	top.style.display = "block";
+	
+	var st = document.getElementById("state_page");
+	st.style.display = "none";
+}
+</script>
+
+</html>
